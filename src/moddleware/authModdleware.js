@@ -1,6 +1,8 @@
 const errorType=require('../constants/error-types')
 const service =require('../service/userService');
 const md5password = require('../utils/password-handle');
+const jwt =require('jsonwebtoken')
+const {PUBLIC_KEY}=require('../app/config')
 const verifyLOgin = async (ctx, next) => {
     //获取用户名密码
     const {
@@ -19,6 +21,7 @@ const verifyLOgin = async (ctx, next) => {
 
     //判断有没有被注册过
     const result = await service.getUserByName(name);
+    // 用户信息
     const user=result[0]
     if (!user) {
         const error = new Error(errorType.USER_DOES_NOT_EXISTS);
@@ -30,10 +33,32 @@ const verifyLOgin = async (ctx, next) => {
         return ctx.app.emit('error', error, ctx);
       }
 
-
+    ctx.user=user
     await next()
 
 }
+const verifyAuth=async(ctx,next)=>{
+    const authorization=ctx.header.authorization;
+    // console.log(authorization);
+    if(!authorization){
+        const error = new Error(errorType.UNAUTHORIZATION);
+        return ctx.app.emit('error', error, ctx);
+    }
+    const token=authorization.replace('Bearer ','')
+    try{
+    //解析token
+    const result=jwt.verify(token,PUBLIC_KEY,{
+        algorithms:["RS256"]
+    })
+    ctx.user=result
+    await next()
+
+    }catch(err){
+        const error = new Error(errorType.UNAUTHORIZATION);
+        return ctx.app.emit('error', error, ctx);
+    }
+}
 module.exports = { 
-    verifyLOgin
+    verifyLOgin,
+    verifyAuth
 }

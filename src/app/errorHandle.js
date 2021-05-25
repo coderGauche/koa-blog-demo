@@ -1,5 +1,4 @@
 const errorTypes=require('../constants/error-types')
-
 const errorHandle = (error,ctx) => {
     console.log(error);
     let status,message;
@@ -19,6 +18,10 @@ const errorHandle = (error,ctx) => {
         case errorTypes.PASSWORD_IS_INCORRENT:
             status=400; //参数穿错误，错误请求
             message="密码有误";
+            break;
+        case errorTypes.UNAUTHORIZATION:
+            status=400; //参数穿错误，错误请求
+            message="无效的token~";
             break;
         default:
             status=404; //参数穿错误，错误请求
