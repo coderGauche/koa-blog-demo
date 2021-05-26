@@ -23,6 +23,10 @@ const errorHandle = (error,ctx) => {
             status=400; //参数穿错误，错误请求
             message="无效的token~";
             break;
+        case errorTypes.UNPERMISSION:
+            status=400; //参数穿错误，错误请求
+            message="您不具备操作的权限~";
+            break;
         default:
             status=404; //参数穿错误，错误请求
             message="NOT FOUND";
