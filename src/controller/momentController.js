@@ -41,5 +41,21 @@ class momentController{
             msg:'删除成功',
         }
     }
+    async addlables(ctx,next){
+        const {lables}=ctx
+        const{momentId}=ctx.params
+        console.log(momentId);
+        console.log(lables);
+        for(let lable of lables){
+            const isExist=await momentService.hasLabel(momentId,lable.id)
+            if(!isExist){
+                await momentService.addLabel(momentId, lable.id);
+            }
+        }
+        ctx.body={
+            code:200,
+            msg:'添加标签成功',
+        }
+    }
 }
 module.exports=new momentController()

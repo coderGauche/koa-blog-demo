@@ -5,7 +5,7 @@ const md5password = require('../utils/password-handle');
 const jwt = require('jsonwebtoken')
 const {
     PUBLIC_KEY
-} = require('../app/config')
+} = require('../app/config');
 const verifyLOgin = async (ctx, next) => {
     //获取用户名密码
     const {
@@ -64,11 +64,13 @@ const verifyAuth = async (ctx, next) => {
 }
 const verifypermission = async (ctx, next) => {
     //1.获取动态详情
-    const {momentId}=ctx.params
+    const [resourcekey]=Object.keys(ctx.params)
+    const tableName=resourcekey.replace('Id','')
+    const resourceId=ctx.params[resourcekey]
     const id=ctx.user.id
     try {
-        const ispermission=await authService.checkmomentservice(momentId,id)
-        if(!ispermission) throw new Error()
+        const ispermission=await authService.checkResource(tableName,resourceId,id)
+        if(!ispermission) throw new Error() 
         await next()
     } catch (err) {
         const error = new Error(errorType.UNPERMISSION);
@@ -76,6 +78,25 @@ const verifypermission = async (ctx, next) => {
     }
    
 }
+
+
+
+// const verifypermission = (tabName)=>{
+//     return async (ctx, next) => {
+//      //1.获取动态详情
+//      const {momentId}=ctx.params
+//      const id=ctx.user.id
+//      try {
+//          const ispermission=await authService.checkResource(tabName,momentId,id)
+//          if(!ispermission) throw new Error()
+//          await next()
+//      } catch (err) {
+//          const error = new Error(errorType.UNPERMISSION);
+//          return ctx.app.emit('error', error, ctx);
+//      }
+    
+//  }
+//  }
 module.exports = {
     verifyLOgin,
     verifyAuth,

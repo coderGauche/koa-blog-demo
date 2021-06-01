@@ -8,13 +8,18 @@ const{
     momentDetail,
     momentList,
     update,
-    del
+    del,
+    addlables
 }=require('../controller/momentController.js')
 
 const {
     verifyAuth,
-    verifypermission
+    verifypermission,
+    
 }=require('../moddleware/authModdleware')
+const {
+    verifyLabelExists
+}=require('../moddleware/label.middleware')
 /**
  * 接口说明：发表动态
  */
@@ -35,5 +40,6 @@ momentRouter.get('/',momentList)
  * 接口说明：删除 需要用户登入
  */
   momentRouter.delete('/:momentId',verifyAuth,verifypermission,del)
+  momentRouter.post('/:momentId/labls',verifyAuth,verifypermission,verifyLabelExists,addlables) 
 
 module.exports=momentRouter
