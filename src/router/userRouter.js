@@ -1,6 +1,7 @@
 const router=require('koa-router')
 const {
-    create
+    create,
+    avatarInfo
 } =require('../controller/userController')
 const {
     verifyUser,
@@ -8,5 +9,6 @@ const {
 }=require('../moddleware/userModdleware')
 const userRouter=new router({prefix:'/users'})
 userRouter.post('/',verifyUser,handlePassword,create)   //verifyUser验证  中间件
+userRouter.get('/:userId/avatar', avatarInfo);
 
 module.exports=userRouter

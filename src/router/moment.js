@@ -9,12 +9,13 @@ const{
     momentList,
     update,
     del,
-    addlables
+    addlables,
+    fileInfo
 }=require('../controller/momentController.js')
 
 const {
     verifyAuth,
-    verifypermission,
+    verifypermission, 
     
 }=require('../moddleware/authModdleware')
 const {
@@ -41,5 +42,7 @@ momentRouter.get('/',momentList)
  */
   momentRouter.delete('/:momentId',verifyAuth,verifypermission,del)
   momentRouter.post('/:momentId/labls',verifyAuth,verifypermission,verifyLabelExists,addlables) 
+  // 动态配图的服务
+momentRouter.get('/images/:filename', fileInfo);
 
 module.exports=momentRouter
